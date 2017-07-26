@@ -3,9 +3,11 @@ package com.lenovo.cooltest;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * Created by liufeng23 on 2017/7/26.
@@ -15,7 +17,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         ViewPager.OnPageChangeListener {
 
     //UI Objects
-    private EditText mSearchView;
+    private SearchView mSearchView;
     private RadioGroup mButtonBar;
     private RadioButton mButtonHome;
     private RadioButton mButtonClassify;
@@ -41,14 +43,19 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     }
 
     private void bindViews() {
-        mSearchView = (EditText) findViewById(R.id.search_edit_text);
+        mSearchView = (SearchView) findViewById(R.id.search_edit_text);
         mButtonBar = (RadioGroup) findViewById(R.id.button_bar_group);
         mButtonHome = (RadioButton) findViewById(R.id.button_home);
         mButtonClassify = (RadioButton) findViewById(R.id.button_classify);
         mButtonCart = (RadioButton) findViewById(R.id.button_cart);
         mButtonMyProfile = (RadioButton) findViewById(R.id.button_myprofile);
         mButtonBar.setOnCheckedChangeListener(this);
-
+        mSearchView.setOnSearchClickListener(new SearchView.OnSearchClickListener() {
+            @Override
+            public void onSearchClick(View view) {
+                Toast.makeText(MainActivity.this, "i'm going to seach", Toast.LENGTH_SHORT).show();
+            }
+        });
         mMainViewPager = (ViewPager) findViewById(R.id.main_view_pager);
         mMainViewPager.setAdapter(mAdapter);
         mMainViewPager.setCurrentItem(0);
@@ -58,16 +65,16 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
-            case R.id.rb_channel:
+            case R.id.button_home:
                 mMainViewPager.setCurrentItem(PAGE_ONE);
                 break;
-            case R.id.rb_message:
+            case R.id.button_classify:
                 mMainViewPager.setCurrentItem(PAGE_TWO);
                 break;
-            case R.id.rb_better:
+            case R.id.button_cart:
                 mMainViewPager.setCurrentItem(PAGE_THREE);
                 break;
-            case R.id.rb_setting:
+            case R.id.button_myprofile:
                 mMainViewPager.setCurrentItem(PAGE_FOUR);
                 break;
         }

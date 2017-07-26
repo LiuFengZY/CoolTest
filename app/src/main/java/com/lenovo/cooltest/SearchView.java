@@ -15,7 +15,8 @@ import android.view.inputmethod.InputMethodManager;
  * Created by liufeng23 on 2017/7/26.
  */
 
-public class SearchView extends AppCompatEditText implements View.OnFocusChangeListener, View.OnKeyListener {
+public class SearchView extends AppCompatEditText implements View.OnFocusChangeListener,
+        View.OnKeyListener, View.OnClickListener {
     private static final String TAG = SearchView.class.getSimpleName();
     /**
      * set default left style.
@@ -52,8 +53,13 @@ public class SearchView extends AppCompatEditText implements View.OnFocusChangeL
     private void init() {
         setOnFocusChangeListener(this);
         setOnKeyListener(this);
+        setOnClickListener(this);
     }
 
+    @Override
+    public void onClick(View view) {
+        Log.d(TAG, "onClick execute");
+    }
     @Override
     protected void onDraw(Canvas canvas) {
         if (isLeft) {
@@ -100,5 +106,6 @@ public class SearchView extends AppCompatEditText implements View.OnFocusChangeL
     public interface OnSearchClickListener {
         void onSearchClick(View view);
     }
+
 }
 
