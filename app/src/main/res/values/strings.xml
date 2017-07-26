@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CoolTest</string>
+    <string name="tab_menu_alert">主页</string>
+    <string name="tab_menu_profile">分类</string>
+    <string name="tab_menu_pay">购物车</string>
+    <string name="tab_menu_setting">我的</string>
+</resources>
