@@ -9,6 +9,9 @@ import android.widget.RadioGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.lenovo.cooltest.utils.HttpThreadPoolUtils;
+import com.lenovo.cooltest.utils.SimpleAsyncHttpClient;
+
 /**
  * Created by liufeng23 on 2017/7/26.
  */
@@ -60,6 +63,18 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         mMainViewPager.setAdapter(mAdapter);
         mMainViewPager.setCurrentItem(0);
         mMainViewPager.addOnPageChangeListener(this);
+        SimpleAsyncHttpClient.doRequestGet("https://www.baidu.com", new SimpleAsyncHttpClient.HttpCallback<String>() {
+
+            @Override
+            public void onSuccess(String response) {
+                System.out.println("lf, sucess:" + response);
+            }
+
+            @Override
+            public void onError(String error) {
+                System.out.println("lf, error:" + error);
+            }
+        });
     }
 
     @Override

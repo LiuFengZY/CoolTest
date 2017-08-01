@@ -60,6 +60,7 @@ public class SearchView extends AppCompatEditText implements View.OnFocusChangeL
     public void onClick(View view) {
         Log.d(TAG, "onClick execute");
     }
+
     @Override
     protected void onDraw(Canvas canvas) {
         if (isLeft) {
