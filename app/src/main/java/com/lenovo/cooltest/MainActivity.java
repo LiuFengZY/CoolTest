@@ -63,7 +63,8 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         mMainViewPager.setAdapter(mAdapter);
         mMainViewPager.setCurrentItem(0);
         mMainViewPager.addOnPageChangeListener(this);
-        SimpleAsyncHttpClient.doRequestGet("https://www.baidu.com", new SimpleAsyncHttpClient.HttpCallback<String>() {
+        SimpleAsyncHttpClient.doHttpRequest(SimpleAsyncHttpClient.HTTP_REQUEST_METHOD.HTTP_POST,
+                "http://10.103.110.8:80/text.xml", new SimpleAsyncHttpClient.HttpCallback<String>() {
 
             @Override
             public void onSuccess(String response) {
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             public void onError(String error) {
                 System.out.println("lf, error:" + error);
             }
-        });
+        }, true);
     }
 
     @Override

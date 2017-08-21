@@ -3,12 +3,15 @@ package com.lenovo.cooltest.utils;
 import android.content.Context;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -35,6 +38,15 @@ public class SimpleAsyncHttpClient {
         HTTP_PUT
     };
 
+    public static final Map<HTTP_REQUEST_METHOD, String> methodMap;
+    static {
+        methodMap = new HashMap<HTTP_REQUEST_METHOD, String>();
+        methodMap.put(HTTP_REQUEST_METHOD.HTTP_GET, "GET");
+        methodMap.put(HTTP_REQUEST_METHOD.HTTP_POST, "POST");
+        methodMap.put(HTTP_REQUEST_METHOD.HTTP_PUT, "PUT");
+
+    }
+
     public String makeHttpGetData(String url, final Map<String, String> params) {
         StringBuffer buffer = new StringBuffer(url);
         buffer.append("?");
@@ -49,34 +61,48 @@ public class SimpleAsyncHttpClient {
         return buffer.toString();
     }
 
-    public static void doRequestGet(String url, final HttpCallback<String> callback, final boolean isWithData) {
-        HttpThreadPoolUtils.execute(new HttpRequestRunnable(0,null,null, callback,
-                url, false));
+    public static void doHttpRequest(HTTP_REQUEST_METHOD method, String url, final HttpCallback<String> callback, final boolean isWithData) {
+        switch(method) {
+            case HTTP_GET:
+                break;
+            case HTTP_POST:
+                HttpThreadPoolUtils.execute(new HttpRequestPostRunnable(null, callback, url, false));
+                break;
+            default:
+                break;
+        }
+
     }
 
-    static class HttpRequestRunnable implements Runnable {
+    /**
+     * Http Get Runnable.
+     */
+    static class HttpRequestGetRunnable implements Runnable {
 
-        final int mSendType;
-        private Map<String, String> mMap = null;
+        @Override
+        public void run() {
+
+        }
+    }
+    /**
+     * Http Post Runnable.
+     */
+    static class HttpRequestPostRunnable implements Runnable {
+
         private Context mContext = null;
         private HttpCallback mCallback = null;
         private String mUrl = "";
         private boolean isShowDialog = false;
 
-        public HttpRequestRunnable(final int sendType, final Map<String, String> map, final Context context,
+        public HttpRequestPostRunnable(final Context context,
                                    final HttpCallback callBack, final String url,
                                    final boolean isShowDialog) {
-            this.mSendType = sendType;
-            this.mMap = map;
             this.mContext = context;
             this.mCallback = callBack;
             this.mUrl = url;
             this.isShowDialog = isShowDialog;
         }
 
-        private void doHttpGet(String url, final HttpCallback callBack) {
-            System.out.println("liufeng, run....do get");
-        }
         @Override
         public void run() {
             String data = null;
@@ -88,34 +114,30 @@ public class SimpleAsyncHttpClient {
                 mCallback.onError(e.getMessage());
                 return;
             }
-            BufferedReader bufferedReader  = null;
-            StringBuffer response = new StringBuffer();
+
             HttpURLConnection urlConnection = null;
+            InputStream is = null;
             try {
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setDoInput(true);
                 urlConnection.setReadTimeout(READ_TIME_OUT);
                 urlConnection.setConnectTimeout(CONNECTE_TIME_OUT);
-                urlConnection.setRequestMethod("GET");
+                urlConnection.setRequestMethod("POST");
                 urlConnection.setUseCaches(false);
                 urlConnection.setRequestProperty("connection", "close");
                 urlConnection.connect();
                 int code = urlConnection.getResponseCode();
                 if (code >= 200 && code < 400) {
-                    bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(),ENCODE));
-                    String line = null;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        response.append(line);
-                    }
-                    System.out.println("on, liufeng, success");
-                    mCallback.onSuccess(response.toString());
+                    is = urlConnection.getInputStream();
+                    byte sRead[] = CommonUtils.read(is);
+                    String strRead = new String(sRead, ENCODE);
+                    System.out.println("liufeng http post, read111 : " + "len..." + strRead.length() + strRead);
+                    mCallback.onSuccess(strRead);
                 } else {
-                    bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream(),ENCODE));
-                    String line = null;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        response.append(line);
-                    }
-                    mCallback.onError(response.toString());
+                    is = urlConnection.getErrorStream();
+                    byte sRead[] = CommonUtils.read(is);
+                    String responseError = new String(sRead, ENCODE);
+                    mCallback.onError(responseError);
                 }
             } catch (SocketTimeoutException e) {
                 e.printStackTrace();
@@ -123,10 +145,12 @@ public class SimpleAsyncHttpClient {
             } catch (IOException e) {
                 e.printStackTrace();
                 mCallback.onError(e.getMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
             } finally {
-                if (bufferedReader != null) {
+                if (is != null) {
                     try {
-                        bufferedReader.close();
+                        is.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
