@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         mMainViewPager.setAdapter(mAdapter);
         mMainViewPager.setCurrentItem(0);
         mMainViewPager.addOnPageChangeListener(this);
-        SimpleAsyncHttpClient.doHttpRequest(SimpleAsyncHttpClient.HTTP_REQUEST_METHOD.HTTP_POST,
+        /*SimpleAsyncHttpClient.doHttpRequest(SimpleAsyncHttpClient.HTTP_REQUEST_METHOD.HTTP_POST,
                 "http://10.103.110.8:80/text.xml", new SimpleAsyncHttpClient.HttpCallback<String>() {
 
             @Override
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             public void onError(String error) {
                 System.out.println("lf, error:" + error);
             }
-        }, true);
+        }, true);*/
     }
 
     @Override

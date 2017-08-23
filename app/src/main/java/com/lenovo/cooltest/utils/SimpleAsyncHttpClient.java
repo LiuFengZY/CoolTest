@@ -28,8 +28,8 @@ public class SimpleAsyncHttpClient {
     private static final String ENCODE = "UTF-8";
 
     public interface HttpCallback <T> {
-        public  void onSuccess(T response);
-        public  void onError(T error);
+        public void onSuccess(T response);
+        public void onError(T error);
     }
 
     public enum HTTP_REQUEST_METHOD {
@@ -37,15 +37,6 @@ public class SimpleAsyncHttpClient {
         HTTP_POST,
         HTTP_PUT
     };
-
-    public static final Map<HTTP_REQUEST_METHOD, String> methodMap;
-    static {
-        methodMap = new HashMap<HTTP_REQUEST_METHOD, String>();
-        methodMap.put(HTTP_REQUEST_METHOD.HTTP_GET, "GET");
-        methodMap.put(HTTP_REQUEST_METHOD.HTTP_POST, "POST");
-        methodMap.put(HTTP_REQUEST_METHOD.HTTP_PUT, "PUT");
-
-    }
 
     public String makeHttpGetData(String url, final Map<String, String> params) {
         StringBuffer buffer = new StringBuffer(url);
