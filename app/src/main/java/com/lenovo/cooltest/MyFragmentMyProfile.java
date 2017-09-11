@@ -17,7 +17,9 @@ public class MyFragmentMyProfile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_view,container,false);
         TextView txt_content = (TextView) view.findViewById(R.id.txt_content);
-        txt_content.setText("My Profile");
+        if (txt_content != null) {
+            txt_content.setText("My Profile");
+        }
         return view;
     }
 }
