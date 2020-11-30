@@ -17,7 +17,9 @@ public class MyFragmentShoppingCart extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_cart_view,container,false);
         TextView txt_content = (TextView) view.findViewById(R.id.txt_content);
-        txt_content.setText("Shopping Cart");
+        if (txt_content != null) {
+            txt_content.setText("Shopping Cart");
+        }
         return view;
     }
 }
